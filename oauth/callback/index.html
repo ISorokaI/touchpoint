@@ -26,7 +26,9 @@
           const state = decode(encodedState || '')
           const redirect = new URL(state.redirect)
           const isChrome = /^https:\/\/[a-p]{32}\.chromiumapp\.org\/google-drive$/.test(redirect.href)
-          const isFirefox = /^http:\/\/127\.0\.0\.1\/mozoauth2\/[a-zA-Z0-9._%@-]+$/.test(redirect.href)
+          const isFirefox = redirect.protocol === 'https:'
+            && redirect.hostname.endsWith('.extensions.allizom.org')
+            && redirect.pathname === '/google-drive'
           if (!state.nonce || (!isChrome && !isFirefox)) throw new Error('invalid redirect')
           location.replace(`${redirect.href}#${params.toString()}`)
         } catch {
