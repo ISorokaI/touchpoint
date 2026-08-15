@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cliche — подключение Google Drive</title>
+    <style>
+      body { margin: 0; display: grid; min-height: 100vh; place-items: center; color: #202124; background: #f8f9fa; font: 16px Arial, sans-serif; }
+      main { max-width: 440px; padding: 32px; border: 1px solid #dadce0; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px #20212418; text-align: center; }
+      h1 { margin: 0 0 12px; font-size: 22px; } p { margin: 0; color: #5f6368; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <main><h1 id="title">Подключаем Google Drive</h1><p id="message">Сейчас вернёмся в Cliche.</p></main>
+    <script>
+      (() => {
+        const title = document.getElementById('title')
+        const message = document.getElementById('message')
+        const params = new URLSearchParams(location.hash.slice(1))
+        const encodedState = params.get('state')
+        const decode = (value) => {
+          const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((value.length + 3) % 4)
+          return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(padded), (character) => `%${character.charCodeAt(0).toString(16).padStart(2, '0')}`).join('')))
+        }
+        try {
+          const state = decode(encodedState || '')
+          const redirect = new URL(state.redirect)
+          const isChrome = /^https:\/\/[a-p]{32}\.chromiumapp\.org\/google-drive$/.test(redirect.href)
+          const isFirefox = /^http:\/\/127\.0\.0\.1\/mozoauth2\/[a-zA-Z0-9._%@-]+$/.test(redirect.href)
+          if (!state.nonce || (!isChrome && !isFirefox)) throw new Error('invalid redirect')
+          location.replace(`${redirect.href}#${params.toString()}`)
+        } catch {
+          title.textContent = 'Не удалось завершить подключение'
+          message.textContent = 'Вернитесь в Cliche и попробуйте снова.'
+        }
+      })()
+    </script>
+  </body>
+</html>
