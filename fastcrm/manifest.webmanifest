@@ -1,0 +1,15 @@
+{
+  "name": "touchpoint",
+  "short_name": "touchpoint",
+  "description": "Кабинет фотостудии",
+  "lang": "ru",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#eeece8",
+  "theme_color": "#eeece8",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
